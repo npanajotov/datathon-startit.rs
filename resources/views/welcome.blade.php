@@ -16,7 +16,7 @@
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
 <script>
-    $.getJSON('data.json', function (objects) { 
+    $.getJSON('data.json', function (objects) {
         objects.forEach((item, index) => {
 
             let street = (item.address.street).replace(/ /g, "+"),
@@ -40,6 +40,63 @@
                 // console.log(response.data.results[0].geometry.location);
             });
         });
+    });
+</script>
+<script>
+    let belgradeElementarySchools = [];
+    let countBelgradeElementarySchool = 0;
+    let belgradeHighSchools = [];
+    let countBelgradeHighSchool = 0;
+    $.getJSON('../../public/elementarySchool.json', function(data) {
+
+        data.forEach(function(element) {
+            if(element.naziv_su_cir === 'Београд') {
+                element.mesto = 'Београд';
+//                        console.log(element.gps);
+                let latlng = element.gps.split(",");
+//                        console.log(latlng);
+                let elementarySchool = {
+                    name: element.naziv_skole,
+                    address: element.adresa,
+                    city: 'Београд',
+                    zip: element.postanski_broj,
+                    phone: element.tel,
+                    lat: latlng[0],
+                    lng: latlng[1],
+                    type: 0
+                };
+                console.log(elementarySchool);
+                countBelgradeElementarySchool++;
+                belgradeElementarySchools.push(elementarySchool)
+            }
+        });
+//                alert("osnovnih skola u BG-u " + countBelgradeElementarySchool + " srednjih skola u BG-u " + countBelgradeHighSchool);
+
+    });
+    $.getJSON('../../public/highSchool.json', function(data) {
+
+        data.forEach(function(element) {
+            if(element.mesto.includes('Београд')) {
+                element.mesto = 'Београд';
+//                        console.log(element.gps);
+                let latlng = element.gps.split(",");
+//                        console.log(latlng);
+                let highSchool = {
+                    name: element.naziv_skole,
+                    address: element.adresa,
+                    city: 'Београд',
+                    zip: element.postanski_broj,
+                    phone: element.tel,
+                    lat: latlng[0],
+                    lng: latlng[1],
+                    type: 0
+                };
+                countBelgradeHighSchool++;
+                belgradeHighSchools.push(highSchool)
+            }
+        });
+//                alert("osnovnih skola u BG-u " + countBelgradeElementarySchool + " srednjih skola u BG-u " + countBelgradeHighSchool);
+
     });
 </script>
 </html>
