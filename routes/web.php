@@ -22,7 +22,7 @@ Route::get('/check', function(\App\Services\HaversineService $haversineService) 
     $bettings = \App\Betting::all();
     if (Illuminate\Support\Facades\Cache::get('check_' . $distance)) {
         $data = Illuminate\Support\Facades\Cache::get('check_' . $distance);
-        $data = $data->unique('school_address');
+        $data = $data->unique('school_address')->values();
         return response()->json($data);
     }
     foreach ($schools as $school) {
@@ -50,6 +50,6 @@ Route::get('/check', function(\App\Services\HaversineService $haversineService) 
         }
     }
     Illuminate\Support\Facades\Cache::put('check_' . $distance, $data, 5);
-    $data = $data->unique('school_address');
+    $data = $data->unique('school_address')->values();
     return response()->json($data);
 });
