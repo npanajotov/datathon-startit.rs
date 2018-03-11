@@ -21,9 +21,9 @@ Route::get('/near-one', function (\App\Services\HaversineService $haversineServi
     $bettings = \App\Betting::all();
     if (Illuminate\Support\Facades\Cache::get('near_one')) {
         $data = Illuminate\Support\Facades\Cache::get('near_one');
-        return response()->json(collect($data)->unique('school_id')->filter(function($item) {
+        return response()->json(collect($data)->unique('school_id')->filter(function ($item) {
             return $item['dist'] < 20000;
-        }));
+        }))->sortBy('dist');
     }
     $items = [];
     foreach ($schools as $school) {
@@ -41,20 +41,23 @@ Route::get('/near-one', function (\App\Services\HaversineService $haversineServi
             }
         }
     }
-    Illuminate\Support\Facades\Cache::put('near_one', $items, 5);
-    return response()->json(collect($items)->values()->filter(function($item) {
+    Illuminate\Support\Facades\Cache::put('near_one', $items, 50);
+    return response()->json(collect($items)->values()->filter(function ($item) {
         return $item['dist'] < 20000;
     })->unique('school_id')->sortByDesc('dist'));
 
 });
 
-Route::get('diagram', function(){
-   return view('diagramcic');
+Route::get('diagram', function () {
+    return view('diagramcic');
 });
-Route::get('histogram', function(){
-   return view('histrogram');
+Route::get('histogram', function () {
+    return view('histrogram');
 });
-Route::get('/check', function(\App\Services\HaversineService $haversineService) {
+Route::get('newdiagram', function () {
+    return view('newdiagram');
+});
+Route::get('/check', function (\App\Services\HaversineService $haversineService) {
     $data = collect([]);
     $distance = request()->input('distance', 200);
     $schools = \App\Schools::all();

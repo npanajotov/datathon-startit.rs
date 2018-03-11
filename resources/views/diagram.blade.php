@@ -12,8 +12,15 @@
 
     <!-- amCharts javascript code -->
     <script type="text/javascript">
-        $.getJSON('http://10.120.200.167:8000/check', function(data) { // TODO: uzeti podatke sa distancma
-
+        $.getJSON('/near-one', function(data) { // TODO: uzeti podatke sa distancma
+            let kladze = [];
+            data.forEach(item=>{
+                kladze.push({
+                    "category": "",
+                    "column-1": item.dist,
+                    "column-2": item.dist
+                });
+            });
             AmCharts.makeChart("chartdiv",
                 {
                     "type": "serial",
@@ -51,43 +58,7 @@
                     "allLabels": [],
                     "balloon": {},
                     "titles": [],
-                    "dataProvider": [// TODO: samo ubaci ovde json podatke sortirane po distanci. u ovaj column-1 i column-2 ide distanca, sve ce se ostalo samo odraditi
-                        {
-                            "category": "category 1", // TODO: upisati ime kladionice
-                            "column-1": 100,//TODO: upisati ovde distance
-                            "column-2": 5 // TODO: upisati ovde distance
-                        },
-                        {
-                            "category": "category 2",
-                            "column-1": 6,
-                            "column-2": 7
-                        },
-                        {
-                            "category": "category 3",
-                            "column-1": 2,
-                            "column-2": 3
-                        },
-                        {
-                            "category": "category 4",
-                            "column-1": 1,
-                            "column-2": 3
-                        },
-                        {
-                            "category": "category 5",
-                            "column-1": 2,
-                            "column-2": 1
-                        },
-                        {
-                            "category": "category 6",
-                            "column-1": 3,
-                            "column-2": 2
-                        },
-                        {
-                            "category": "category 7",
-                            "column-1": 6,
-                            "column-2": 8
-                        }
-                    ]
+                    "dataProvider": kladze
                 }
             );
         });
