@@ -21,8 +21,9 @@ Route::get('/near-one', function (\App\Services\HaversineService $haversineServi
     $bettings = \App\Betting::all();
     if (Illuminate\Support\Facades\Cache::get('near_one')) {
         $data = Illuminate\Support\Facades\Cache::get('near_one');
+
         return response()->json(collect($data)->unique('school_id')->filter(function($item) {
-            return $item['dist'] < 20000;
+            return $item['dist'] < 400;
         }));
     }
     $items = [];
@@ -43,7 +44,7 @@ Route::get('/near-one', function (\App\Services\HaversineService $haversineServi
     }
     Illuminate\Support\Facades\Cache::put('near_one', $items, 5);
     return response()->json(collect($items)->values()->filter(function($item) {
-        return $item['dist'] < 20000;
+        return $item['dist'] < 400;
     })->unique('school_id')->sortByDesc('dist'));
 
 });
