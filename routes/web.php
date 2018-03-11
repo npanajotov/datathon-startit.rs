@@ -20,6 +20,10 @@ Route::get('/check', function(\App\Services\HaversineService $haversineService) 
     $distance = request()->input('distance', 200);
     $schools = \App\Schools::all();
     $bettings = \App\Betting::all();
+    if (Illuminate\Support\Facades\Cache::get('check_' . $distance)) {
+        $data = Illuminate\Support\Facades\Cache::get('check_' . $distance);
+        return response()->json($data);
+    }
     foreach ($schools as $school) {
         foreach ($bettings as $betting) {
             $dist = $haversineService->getDistance($school->lat, $school->lng, $betting->lat, $betting->lng);
@@ -44,5 +48,6 @@ Route::get('/check', function(\App\Services\HaversineService $haversineService) 
             }
         }
     }
+    Illuminate\Support\Facades\Cache::put('check_' . $distance, $data, 5);
     return response()->json($data);
 });
