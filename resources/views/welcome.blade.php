@@ -8,9 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Laravel</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+    <style>body {
+            margin: 0;
+            padding: 0
+        }</style>
 </head>
 <body>
-<div>Skidam...</div>
 <div id="app">
     <home></home>
 </div>

@@ -10,6 +10,7 @@
                 map: {},
                 floodsObj: {},
                 floods: [],
+                dataArr: [],
             }
         },
         mounted: function () {
@@ -19,9 +20,10 @@
             initMap: function () {
                 let items = [];
                 axios.get('/check').then(response => {
+                    this.dataArr = response.data;
                     response.data.forEach(item => {
-                        items.push(item.betting_lat);
                         items.push(item.school_lat);
+                        items.push(item.betting_lat);
 
                         this.floods.push(items);
                         items = [];
@@ -29,22 +31,23 @@
 
 
                     this.map = new google.maps.Map(document.getElementById('map'), {
-                        zoom: 13,
+                        zoom: 14,
                         center: {lat: 44.810160, lng: 20.461457},
+                        // mapTypeId: 'moon',
                         mapTypeId: 'roadmap',
                         styles: [
                             {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
                             {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-                            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+                            {elementType: 'labels.text.fill', stylers: [{color: '#545658'}]},
                             {
                                 featureType: 'administrative.locality',
                                 elementType: 'labels.text.fill',
-                                stylers: [{color: '#d59563'}]
+                                stylers: [{color: '#545658'}]
                             },
                             {
                                 featureType: 'poi',
                                 elementType: 'labels.text.fill',
-                                stylers: [{color: '#d59563'}]
+                                stylers: [{color: '#545658'}]
                             },
                             {
                                 featureType: 'poi.park',
@@ -69,7 +72,7 @@
                             {
                                 featureType: 'road',
                                 elementType: 'labels.text.fill',
-                                stylers: [{color: '#9ca5b3'}]
+                                stylers: [{color: '#6f7582'}]
                             },
                             {
                                 featureType: 'road.highway',
@@ -94,7 +97,7 @@
                             {
                                 featureType: 'transit.station',
                                 elementType: 'labels.text.fill',
-                                stylers: [{color: '#d59563'}]
+                                stylers: [{color: '#545658'}]
                             },
                             {
                                 featureType: 'water',
@@ -131,14 +134,30 @@
 
 
             setFloodMap() {
-                this.floods.forEach(item => {
+                this.floods.forEach((item, index) => {
+                    let color = '#ff1313', opacity = 1, distance = this.dataArr[index].distance, weight = 3;
+                    if (distance > 175) {
+                        weight = 2;
+                        opacity = 0.25;
+                    } else if (distance > 150) {
+                        opacity = 0.5
+                        weight = 2;
+                    } else if (distance > 100) {
+                        opacity = 0.75;
+                        weight = 2.5;
+                    } else {
+                        opacity = 1;
+                        weight = 7;
+                    }
                     this.floodsObj = new google.maps.Polyline({
                         path: item,
                         geodesic: true,
-                        strokeColor: '#37da00',
-                        strokeOpacity: 1.0,
-                        strokeWeight: 2
+                        strokeColor: color,
+                        strokeOpacity: opacity,
+                        strokeWeight: weight
                     });
+
+
                     this.floodsObj.setMap(this.map);
                 })
 
@@ -152,7 +171,12 @@
 <style>
     #map {
         width: 100%;
-        height: 550px;
+        height: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        position: absolute;
     }
 
     #map-control {

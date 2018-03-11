@@ -47101,7 +47101,7 @@ exports = module.exports = __webpack_require__(42)(false);
 
 
 // module
-exports.push([module.i, "\n#map {\n    width: 100%;\n    height: 550px;\n}\n#map-control {\n    background: #fff;\n    border: 2px solid #fff;\n    border-radius: 3px;\n    -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, .3);\n    box-shadow: 0 2px 6px rgba(0, 0, 0, .3);\n    margin: 10px;\n    color: #000;\n    font-size: 16px;\n    padding: 10px;\n}\n#infowindow-content .title {\n    font-weight: bold;\n}\n#infowindow-content {\n    display: none;\n}\n#map #infowindow-content {\n    display: inline;\n}\n\n", ""]);
+exports.push([module.i, "\n#map {\n    width: 100%;\n    height: 100%;\n    left: 0;\n    right: 0;\n    top: 0;\n    bottom: 0;\n    position: absolute;\n}\n#map-control {\n    background: #fff;\n    border: 2px solid #fff;\n    border-radius: 3px;\n    -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, .3);\n    box-shadow: 0 2px 6px rgba(0, 0, 0, .3);\n    margin: 10px;\n    color: #000;\n    font-size: 16px;\n    padding: 10px;\n}\n#infowindow-content .title {\n    font-weight: bold;\n}\n#infowindow-content {\n    display: none;\n}\n#map #infowindow-content {\n    display: inline;\n}\n\n", ""]);
 
 // exports
 
@@ -47575,7 +47575,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             map: {},
             floodsObj: {},
-            floods: []
+            floods: [],
+            dataArr: []
         };
     },
 
@@ -47588,26 +47589,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var items = [];
             axios.get('/check').then(function (response) {
+                _this.dataArr = response.data;
                 response.data.forEach(function (item) {
-                    items.push(item.betting_lat);
                     items.push(item.school_lat);
+                    items.push(item.betting_lat);
 
                     _this.floods.push(items);
                     items = [];
                 });
 
                 _this.map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 13,
+                    zoom: 14,
                     center: { lat: 44.810160, lng: 20.461457 },
+                    // mapTypeId: 'moon',
                     mapTypeId: 'roadmap',
-                    styles: [{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] }, { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] }, { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] }, {
+                    styles: [{ elementType: 'geometry', stylers: [{ color: '#242f3e' }] }, { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] }, { elementType: 'labels.text.fill', stylers: [{ color: '#545658' }] }, {
                         featureType: 'administrative.locality',
                         elementType: 'labels.text.fill',
-                        stylers: [{ color: '#d59563' }]
+                        stylers: [{ color: '#545658' }]
                     }, {
                         featureType: 'poi',
                         elementType: 'labels.text.fill',
-                        stylers: [{ color: '#d59563' }]
+                        stylers: [{ color: '#545658' }]
                     }, {
                         featureType: 'poi.park',
                         elementType: 'geometry',
@@ -47627,7 +47630,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }, {
                         featureType: 'road',
                         elementType: 'labels.text.fill',
-                        stylers: [{ color: '#9ca5b3' }]
+                        stylers: [{ color: '#6f7582' }]
                     }, {
                         featureType: 'road.highway',
                         elementType: 'geometry',
@@ -47647,7 +47650,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }, {
                         featureType: 'transit.station',
                         elementType: 'labels.text.fill',
-                        stylers: [{ color: '#d59563' }]
+                        stylers: [{ color: '#545658' }]
                     }, {
                         featureType: 'water',
                         elementType: 'geometry',
@@ -47681,14 +47684,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         setFloodMap: function setFloodMap() {
             var _this2 = this;
 
-            this.floods.forEach(function (item) {
+            this.floods.forEach(function (item, index) {
+                var color = '#ff1313',
+                    opacity = 1,
+                    distance = _this2.dataArr[index].distance,
+                    weight = 3;
+                if (distance > 175) {
+                    weight = 2;
+                    opacity = 0.25;
+                } else if (distance > 150) {
+                    opacity = 0.5;
+                    weight = 2;
+                } else if (distance > 100) {
+                    opacity = 0.75;
+                    weight = 2.5;
+                } else {
+                    opacity = 1;
+                    weight = 7;
+                }
                 _this2.floodsObj = new google.maps.Polyline({
                     path: item,
                     geodesic: true,
-                    strokeColor: '#37da00',
-                    strokeOpacity: 1.0,
-                    strokeWeight: 2
+                    strokeColor: color,
+                    strokeOpacity: opacity,
+                    strokeWeight: weight
                 });
+
                 _this2.floodsObj.setMap(_this2.map);
             });
         }
