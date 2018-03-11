@@ -15,3 +15,4 @@ use Illuminate\Http\Request;
 
 
 Route::post('betting', 'HomeController@index');
+Route::post('schools', 'HomeController@schools');

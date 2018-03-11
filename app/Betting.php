@@ -8,5 +8,4 @@ class Betting extends Model
 {
     protected $table = 'betting';
     protected $fillable = ['name', 'address', 'city', 'zip', 'phone', 'lat', 'lng'];
-//    public $timestamps = false;
 }
