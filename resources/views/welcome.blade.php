@@ -47,6 +47,29 @@
     //         });
     //     });
     // });
+    //    $.getJSON('data.json', function (objects) {
+    //        objects.forEach((item, index) => {
+    //
+    //            let street = (item.address.street).replace(/ /g, "+"),
+    //                city = 'Beograd',
+    //                url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + street + ',' + city + '&key=AIzaSyDO5z2fZjTYcTi8fPbiYaFlQcSFDMY3LhI';
+    //
+    //            axios.get(url).then(response => {
+    //                let data = {
+    //                    name: item.shortTitle,
+    //                    address: item.address.street,
+    //                    city: city,
+    //                    zip: item.ptt,
+    //                    phone: item.phone,
+    //                    lat: response.data.results[0].geometry.location.lat,
+    //                    lng: response.data.results[0].geometry.location.lng
+    //                };
+    //                axios.post('/api/betting', data).then(response => {
+    //                    console.log('success');
+    //                });
+    //            });
+    //        });
+    //    });
 </script>
 <script>
 
