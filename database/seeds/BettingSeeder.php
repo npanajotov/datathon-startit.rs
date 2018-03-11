@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class KladzaSeeder extends Seeder
+class BettingSeeder extends Seeder
 {
     /**
      * Run the database seeds.

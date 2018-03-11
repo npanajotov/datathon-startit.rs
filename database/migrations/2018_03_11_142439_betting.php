@@ -20,8 +20,8 @@ class Betting extends Migration
             $table->string('city')->nullable();
             $table->string('zip')->nullable();
             $table->string('phone')->nullable();
-            $table->string('lat')->nullable();
-            $table->string('lng')->nullable();
+            $table->double('lat')->nullable();
+            $table->double('lng')->nullable();
             $table->timestamps();
         });
     }
