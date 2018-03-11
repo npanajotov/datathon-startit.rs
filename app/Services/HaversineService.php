@@ -1,10 +1,15 @@
 <?php
+namespace App\Services;
 
 class HaversineService
 {
     public function getDistance($latitude1, $longitude1, $latitude2, $longitude2)
     {
-        $earth_radius = 6371;
+        $latitude1 = floatval($latitude1);
+        $latitude2 = floatval($latitude2);
+        $longitude1 = floatval($longitude1);
+        $longitude2 = floatval($longitude2);
+        $earth_radius = 6378137;
 
         $dLat = deg2rad($latitude2 - $latitude1);
         $dLon = deg2rad($longitude2 - $longitude1);

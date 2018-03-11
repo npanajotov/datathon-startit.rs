@@ -15,3 +15,34 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/check', function(\App\Services\HaversineService $haversineService) {
+    $data = collect([]);
+    $distance = request()->input('distance', 200);
+    $schools = \App\Schools::all();
+    $bettings = \App\Betting::all();
+    foreach ($schools as $school) {
+        foreach ($bettings as $betting) {
+            $dist = $haversineService->getDistance($school->lat, $school->lng, $betting->lat, $betting->lng);
+            if ($dist <= $distance) {
+                $data->push([
+                    'school_id' => $school->id,
+                    'betting_id' => $betting->id,
+                    'distance' => $dist,
+                    'school' => $school->name,
+                    'betting' => $betting->name,
+                    'school_address' => $school->address,
+                    'betting_address' => $betting->address,
+                    'school_lat' => [
+                        'lat' => $school->lat,
+                        'lng' => $school->lng
+                    ],
+                    'betting_lat' => [
+                        'lat' => $betting->lat,
+                        'lng' => $betting->lng
+                    ]
+                ]);
+            }
+        }
+    }
+    return response()->json($data);
+});
