@@ -50,6 +50,6 @@ Route::get('/check', function(\App\Services\HaversineService $haversineService) 
         }
     }
     Illuminate\Support\Facades\Cache::put('check_' . $distance, $data, 5);
-
+    $data = $data->unique('school_address');
     return response()->json($data);
 });
