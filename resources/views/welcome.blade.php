@@ -16,7 +16,7 @@
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
 <script>
-    $.getJSON('data.json', function (objects) { 
+    $.getJSON('data.json', function (objects) {
         objects.forEach((item, index) => {
 
             let street = (item.address.street).replace(/ /g, "+"),
@@ -36,10 +36,11 @@
                 axios.post('/api/betting', data).then(response => {
                     console.log('success');
                 });
-                // console.log(item);
-                // console.log(response.data.results[0].geometry.location);
             });
         });
     });
+</script>
+<script>
+    
 </script>
 </html>
