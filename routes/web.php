@@ -48,7 +48,13 @@ Route::get('/near-one', function (\App\Services\HaversineService $haversineServi
 
 });
 
-Route::get('/check', function (\App\Services\HaversineService $haversineService) {
+Route::get('diagram', function(){
+   return view('diagramcic');
+});
+Route::get('histogram', function(){
+   return view('histrogram');
+});
+Route::get('/check', function(\App\Services\HaversineService $haversineService) {
     $data = collect([]);
     $distance = request()->input('distance', 200);
     $schools = \App\Schools::all();
@@ -82,7 +88,7 @@ Route::get('/check', function (\App\Services\HaversineService $haversineService)
             }
         }
     }
-    Illuminate\Support\Facades\Cache::put('check_' . $distance, $data, 5);
+    Illuminate\Support\Facades\Cache::put('check_' . $distance, $data, 50);
     $data = $data->unique('school_address')->values();
     return response()->json($data);
 });
