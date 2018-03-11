@@ -15,7 +15,40 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/check', function(\App\Services\HaversineService $haversineService) {
+Route::get('/near-one', function (\App\Services\HaversineService $haversineService) {
+    $data = collect([]);
+    $schools = \App\Schools::all();
+    $bettings = \App\Betting::all();
+    if (Illuminate\Support\Facades\Cache::get('near_one')) {
+        $data = Illuminate\Support\Facades\Cache::get('near_one');
+        return response()->json(collect($data)->unique('school_id')->filter(function($item) {
+            return $item['dist'] < 20000;
+        }));
+    }
+    $items = [];
+    foreach ($schools as $school) {
+        $item[$school->id] = PHP_INT_MAX;
+        foreach ($bettings as $betting) {
+            $dist = $haversineService->getDistance($school->lat, $school->lng, $betting->lat, $betting->lng);
+            if ($dist < $item[$school->id]) {
+                $item[$school->id] = $dist;
+                $items[$school->id] = [
+                    'school_id' => $school->id,
+                    'school' => $school->name,
+                    'betting' => $betting->name,
+                    'dist' => $dist
+                ];
+            }
+        }
+    }
+    Illuminate\Support\Facades\Cache::put('near_one', $items, 5);
+    return response()->json(collect($items)->values()->filter(function($item) {
+        return $item['dist'] < 20000;
+    })->unique('school_id')->sortByDesc('dist'));
+
+});
+
+Route::get('/check', function (\App\Services\HaversineService $haversineService) {
     $data = collect([]);
     $distance = request()->input('distance', 200);
     $schools = \App\Schools::all();
