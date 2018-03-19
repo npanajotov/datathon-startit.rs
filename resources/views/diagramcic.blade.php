@@ -16,10 +16,17 @@
 
     <!-- amCharts javascript code -->
     <script type="text/javascript">
+        function sortByKey(array, key) {
+            return array.sort(function(a, b) {
+                var x = a[key]; var y = b[key];
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            });
+        }
+
         $.getJSON('/near-one', function (data) { // TODO: uzeti podatke sa distancma
             let kladze = [];
             let mdata = Object.values(data);
-
+            mdata = sortByKey(mdata, 'dist');
             console.log(mdata);
             mdata.forEach(item => {
                 kladze.push({

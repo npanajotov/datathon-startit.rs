@@ -2,8 +2,12 @@
 <html>
 <head>
     <title>smoothed line | amCharts</title>
-    <meta name="description" content="chart created using amCharts live editor" />
+    <meta name="description" content="chart created using amCharts live editor"/>
 
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
     <!-- amCharts javascript sources -->
     <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
     <script type="text/javascript" src="https://cdn.amcharts.com/lib/3/serial.js"></script>
@@ -12,15 +16,30 @@
 
     <!-- amCharts javascript code -->
     <script type="text/javascript">
-        $.getJSON('/near-one', function(data) { // TODO: uzeti podatke sa distancma
-            let kladze = [];
-            data.forEach(item=>{
-                kladze.push({
-                    "category": "",
-                    "column-1": item.dist,
-                    "column-2": item.dist
-                });
+        function sortByKey(array, key) {
+            return array.sort(function(a, b) {
+                var x = a[key]; var y = b[key];
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
             });
+        }
+
+        $.getJSON('/near-one', function (data) { // TODO: uzeti podatke sa distancma
+            let kladze = [];
+            let mdata = Object.values(data);
+
+            for (let i = 0; i < 400; i++) {
+                let to = 0;
+                mdata.forEach(item => {
+                    if (i === parseInt(item.dist))
+                        to++;
+                });
+                kladze.push({
+                    "category": i,
+                    "column-1": to,
+                    "column-2": to
+                });
+            }
+            console.log(kladze);
             AmCharts.makeChart("chartdiv",
                 {
                     "type": "serial",
@@ -66,6 +85,6 @@
     </script>
 </head>
 <body>
-<div id="chartdiv" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
+<div id="chartdiv" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
 </body>
 </html>

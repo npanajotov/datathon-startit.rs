@@ -33,7 +33,7 @@
                     this.map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 14,
                         center: {lat: 44.810160, lng: 20.461457},
-                        // mapTypeId: 'moon',
+                        // mapTypeId: 'moon', // ovo izmeni ako oces praznu mapu
                         mapTypeId: 'roadmap',
                         styles: [
                             {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
